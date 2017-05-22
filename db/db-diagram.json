@@ -1,0 +1,73 @@
+{
+  "zone":
+  [
+    {
+      "_id": "",
+      "name":"",
+      "description":"",
+      "type":"External",
+      "range":{
+        "min":"",
+        "max":""
+        },
+      "sensors":[
+        {
+          "_id":"",
+          "hostname":"",
+          "port":"",
+          "name":"",
+          "description":"",
+          "location": {
+            "latitude":"",
+            "longitude":""
+          },
+          "range":{
+            "min":"",
+            "max":""
+          },
+          "reads":[
+            {
+              "value": "",
+              "timestamp":""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  
+  "user": [
+    {
+      "_id":"",
+      "email":"",
+      "password":"",
+      "type":"",
+      "dashboard":{
+          "lines":[
+            {
+              "graphics":[
+                {
+                  "zone_id":"",
+                  "sensor_id":"",
+                  "rangeTime":""
+                }
+              ]
+            }
+          ]
+        }
+    }
+  ],
+  
+  "notification":{
+    "_id":"",
+    "zona_id":"",
+    "sensor_id":"",
+    "range":{
+      "min":"",
+      "max":""
+    },
+    "value":"",
+    "description":""
+  }
+}
+   
