@@ -1,3 +1,6 @@
-[submodule "sonar/sonar-api"]
-	path = sonar/sonar-api
+[submodule "sonar-cli"]
+	path = sonar-cli
+	url = https://github.com/uNmasK95/sonar-cli.git
+[submodule "sonar-api"]
+	path = sonar-api
 	url = https://github.com/uNmasK95/sonar-api.git
