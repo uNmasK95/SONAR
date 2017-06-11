@@ -1,0 +1,10 @@
+---
+admin:
+  password: admin
+reads:
+  url: teste
+  zone: 1
+  sensor: 2
+  rate: 30
+  state: true
+  token: '1'

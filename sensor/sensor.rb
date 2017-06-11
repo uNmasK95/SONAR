@@ -1,0 +1,107 @@
+require 'yaml'
+
+class Sensor
+
+  attr_accessor :rate, :zone, :sensor, :url, :thread_read_noise_run, :thread_read_noise
+
+  def initialize
+    @config = YAML.load_file('config.yml')
+    run if openConfig
+  end
+
+  def register(zone,sensor,url,rate,token)
+    @zone = zone
+    @sensor = sensor
+    @url = url
+    @rate = rate
+    @token = token
+
+    run if not @state_run
+    @state_run = true
+    saveConfig
+  end
+
+  def setRate(rate)
+    @rate = rate
+    saveConfig
+  end
+
+  def state
+    { state: @state_run, zone: @zone, sensor: @sensor, url: @url, rate: @rate }
+  end
+
+  def turnOn
+    # ligar sensor
+    @state_run = true
+    saveConfig
+    run
+    { state: @state_run }
+  end
+
+  def turnOff
+    # desligar sensor
+    @state_run = false
+    saveConfig
+    { state: false }
+  end
+
+  private
+
+  def openConfig
+    @zone = @config['reads']['zone'] if @config['reads']['zone']
+    @sensor = @config['reads']['sensor'] if @config['reads']['sensor']
+    @url = @config['reads']['url'] if @config['reads']['url']
+    @rate = @config['reads']['rate'] || 30
+    @state_run = @config['reads']['state'] || false
+    @admin_password = @config['admin']['password'] if @config['admin']['password']
+
+    @state_run and @zone and @sensor and @url
+  end
+
+  def saveConfig
+    @config['reads']['url'] = @url if @url
+    @config['reads']['zone'] = @zone if @zone
+    @config['reads']['sensor'] = @sensor if @sensor
+    @config['reads']['rate'] = @rate if @rate
+    @config['reads']['state'] = @state_run if @state_run
+    @config['reads']['token'] = @token if @token
+
+
+    File.open('config.yml', 'r+') do |file|
+      file.write(@config.to_yaml)
+    end
+  end
+
+  def sendValue value
+    # result = HTTParty.post(
+    #     @url,
+    #     :body => {zone: @zone,
+    #               sensor: @sensor,
+    #               value: value,
+    #               timestamp: Time.now.getutc
+    #     }.to_json,
+    #     :headers => { 'Content-Type' => 'application/json' })
+    # return result
+    puts value
+  end
+
+  def run
+    puts 'begin'
+    @thread_read_noise = Thread.new {
+      begin
+        Thread.stop if not @state_run
+
+        loop do
+          Thread.stop if not @state_run
+          sleep(@rate)
+          sendValue(rand(0..100))
+        end
+      rescue  Exception => e
+        puts "error #{e}"
+      end
+    }
+  end
+
+
+end
+
