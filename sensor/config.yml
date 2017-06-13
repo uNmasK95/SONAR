@@ -1,10 +1,12 @@
 ---
 admin:
+  email: admin
   password: admin
 reads:
-  url: http://localhost:3000/reads
+  url: http://127.0.0.1:3000/reads
   zone: 593e6e7db4dedf1613940c5b
-  sensor: 593e6f84b4dedf1613940c5c
-  rate: 10
+  sensor: 59403acaf5f36da3d4e886ec
+  rate: 30
   state: true
-  token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjp7IiRvaWQiOiI1OTNkNGRkM2Y1ZjM2ZGFlNjg2YWU1YTIifSwiZXhwIjoxNDk3NDI4NDk0fQ.bUxTHcTL7KNyGFx3gFzeOV_MxtTYGOBCkLKwBEO4QEU'
+  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjp7IiRvaWQiOiI1OTNkNGRkM2Y1ZjM2ZGFlNjg2YWU1YTIifSwiZXhwIjoxNDk3NDI4NDk0fQ.bUxTHcTL7KNyGFx3gFzeOV_MxtTYGOBCkLKwBEO4QEU
+

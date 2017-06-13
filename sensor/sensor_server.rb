@@ -12,7 +12,6 @@ end
 
 post '/register' do
   url = params[:url]
-  token = params[:token]
   zone = params[:zone]
   sensor = params[:sensor]
   rate = params[:rate].to_i

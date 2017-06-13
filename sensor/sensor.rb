@@ -18,11 +18,11 @@ class Sensor
   end
 
   def register(zone,sensor,url,rate,token)
+    puts "registe"
     @zone = zone
     @sensor = sensor
     @url = url
     @rate = rate
-    @token = token
 
     run if not @state_run
     @state_run = true
@@ -61,6 +61,7 @@ class Sensor
     @url = @config['reads']['url'] if @config['reads']['url']
     @rate = @config['reads']['rate'].to_i || 30
     @state_run = @config['reads']['state'] || false
+    @admin_email = @config['admin']['email'] if @config['admin']['email']
     @admin_password = @config['admin']['password'] if @config['admin']['password']
     @token = @config['reads']['token'] if @config['reads']['token']
     @state_run and @zone and @sensor and @url
@@ -74,7 +75,6 @@ class Sensor
     @config['reads']['state'] = @state_run if @state_run
     @config['reads']['token'] = @token if @token
 
-
     File.open('config.yml', 'r+') do |file|
       file.write(@config.to_yaml)
     end
@@ -83,6 +83,7 @@ class Sensor
   def sendValue value
     puts value
     #colocar try cath aqui
+    # verificar se temos token se não vamos ter de fazer um login do administrador
     result = HTTParty.post(
         @url,
         headers: {"Authorization" => "#{@token}"},
