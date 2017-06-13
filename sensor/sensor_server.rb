@@ -13,8 +13,8 @@ end
 post '/register' do
   url = params[:url]
   token = params[:token]
-  zone = params[:zone].to_i
-  sensor = params[:sensor].to_i
+  zone = params[:zone]
+  sensor = params[:sensor]
   rate = params[:rate].to_i
 
   $sensor.register( zone,sensor,url,rate,token )

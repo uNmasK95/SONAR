@@ -1,6 +1,14 @@
 require 'yaml'
+require 'httparty'
+require 'json'
+
 
 class Sensor
+  include HTTParty
+
+  format :json
+  headers 'Content-Type' => 'application/json'
+
 
   attr_accessor :rate, :zone, :sensor, :url, :thread_read_noise_run, :thread_read_noise
 
@@ -51,10 +59,10 @@ class Sensor
     @zone = @config['reads']['zone'] if @config['reads']['zone']
     @sensor = @config['reads']['sensor'] if @config['reads']['sensor']
     @url = @config['reads']['url'] if @config['reads']['url']
-    @rate = @config['reads']['rate'] || 30
+    @rate = @config['reads']['rate'].to_i || 30
     @state_run = @config['reads']['state'] || false
     @admin_password = @config['admin']['password'] if @config['admin']['password']
-
+    @token = @config['reads']['token'] if @config['reads']['token']
     @state_run and @zone and @sensor and @url
   end
 
@@ -73,16 +81,17 @@ class Sensor
   end
 
   def sendValue value
-    # result = HTTParty.post(
-    #     @url,
-    #     :body => {zone: @zone,
-    #               sensor: @sensor,
-    #               value: value,
-    #               timestamp: Time.now.getutc
-    #     }.to_json,
-    #     :headers => { 'Content-Type' => 'application/json' })
-    # return result
     puts value
+    #colocar try cath aqui
+    result = HTTParty.post(
+        @url,
+        headers: {"Authorization" => "#{@token}"},
+        body: { zone: @zone,
+                sensor: @sensor,
+                value: value,
+                timestamp: Time.now.getutc.to_i
+        })
+    return result
   end
 
   def run
@@ -93,8 +102,8 @@ class Sensor
 
         loop do
           Thread.stop if not @state_run
-          sleep(@rate)
           sendValue(rand(0..100))
+          sleep(@rate)
         end
       rescue  Exception => e
         puts "error #{e}"
