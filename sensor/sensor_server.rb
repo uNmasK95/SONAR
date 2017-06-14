@@ -16,7 +16,7 @@ post '/register' do
   sensor = params[:sensor]
   rate = params[:rate].to_i
 
-  $sensor.register( zone,sensor,url,rate,token )
+  $sensor.register( zone,sensor,url,rate )
 
   content_type :json
   $sensor.state.to_json

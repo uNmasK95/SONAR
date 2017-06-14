@@ -17,7 +17,7 @@ class Sensor
     run if openConfig
   end
 
-  def register(zone,sensor,url,rate,token)
+  def register(zone,sensor,url,rate)
     puts "registe"
     @zone = zone
     @sensor = sensor
@@ -55,6 +55,17 @@ class Sensor
 
   private
 
+  def loginToken
+    response = HTTParty.post(
+        @url + '/login',
+        body: { email: @admin_email,
+                password: @admin_password
+        })
+
+    response_hash =  JSON.parse(response.body)
+    @token = response_hash['auth_token']
+  end
+
   def openConfig
     @zone = @config['reads']['zone'] if @config['reads']['zone']
     @sensor = @config['reads']['sensor'] if @config['reads']['sensor']
@@ -84,15 +95,19 @@ class Sensor
     puts value
     #colocar try cath aqui
     # verificar se temos token se não vamos ter de fazer um login do administrador
-    result = HTTParty.post(
-        @url,
+    response = HTTParty.post(
+        @url + '/reads',
         headers: {"Authorization" => "#{@token}"},
         body: { zone: @zone,
                 sensor: @sensor,
                 value: value,
                 timestamp: Time.now.getutc.to_i
         })
-    return result
+    puts response.code
+    if response.code == 401
+      loginToken
+      saveConfig
+    end
   end
 
   def run
