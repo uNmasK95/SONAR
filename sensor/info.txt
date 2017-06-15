@@ -1,0 +1,5 @@
+sox -d --norm -t .wav - silence -l 1 0 1% 1 6.0 1% rate 16k | lame -V2 - out.mp3
+(this would autodetect non-silence and start recording then)
+
+arecord -q -d 3 -c 1 -f S16_LE -r 22050 -t wav | lame -V2 - out.mp3
+(which would just record for 3 seconds right from the start)
