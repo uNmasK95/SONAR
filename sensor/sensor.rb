@@ -1,10 +1,12 @@
 require 'yaml'
 require 'httparty'
 require 'json'
-
+require "open3"
 
 class Sensor
   include HTTParty
+  include Math
+
 
   format :json
   headers 'Content-Type' => 'application/json'
@@ -129,13 +131,25 @@ class Sensor
 
         loop do
           Thread.stop if not @state_run
-          sendValue(rand(0..100))
+          sendValue(readNoise)
           sleep(@rate)
         end
       rescue  Exception => e
         puts "error #{e}"
       end
     }
+  end
+
+  def readNoise
+    Open3.capture2e("timeout #{@rate}s arecord  -D plughw:0,0 -f cd /tmp/test.wav")
+    o,e = Open3.capture2e("sox -t .wav /tmp/test.wav -n stat")
+    v = o.match("Maximum amplitude:[ ]*[0-9].[0-9]*\n").to_s.match("[0-9].[0-9]*").to_s.to_f
+    20 * ( Math.log10( (2*10**-5)/ v )).abs
+  end
+
+  def generateNoise
+    puts "random"
+    rand(0..100)
   end
 
 
