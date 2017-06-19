@@ -132,7 +132,7 @@ class Sensor
         loop do
           Thread.stop if not @state_run
           sendValue(readNoise)
-          sleep(@rate)
+          #sleep(@rate)
         end
       rescue  Exception => e
         puts "error #{e}"
