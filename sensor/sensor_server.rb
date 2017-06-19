@@ -2,6 +2,8 @@ require 'sinatra'
 require_relative 'sensor'
 require 'json'
 
+set :bind, '0.0.0.0'
+
 $sensor = Sensor.new
 
 get '/state', :provides => :json do
