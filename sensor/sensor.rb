@@ -23,9 +23,10 @@ class Sensor
     @sensor = sensor
     @url = url
     @rate = rate
-
-    run if not @state_run
-    @state_run = true
+    if not @state_run
+      run
+      @state_run = true
+    end
     saveConfig
   end
 
@@ -40,30 +41,35 @@ class Sensor
 
   def turnOn
     # ligar sensor
-    @state_run = true
-    saveConfig
-    run
-    { state: @state_run }
+    if not @state_run
+      @state_run = true
+      saveConfig
+      run
+    end
   end
 
   def turnOff
     # desligar sensor
     @state_run = false
+    @thread_read_noise.terminate
     saveConfig
-    { state: false }
   end
 
   private
 
   def loginToken
-    response = HTTParty.post(
-        @url + '/login',
-        body: { email: @admin_email,
-                password: @admin_password
-        })
+    begin
+      response = HTTParty.post(
+          @url + '/login',
+          body: { email: @admin_email,
+                  password: @admin_password
+          })
 
-    response_hash =  JSON.parse(response.body)
-    @token = response_hash['auth_token']
+      response_hash =  JSON.parse(response.body)
+      @token = response_hash['auth_token']
+    rescue HTTParty::Error
+      puts 'Error to make POST /login'
+    end
   end
 
   def openConfig
@@ -79,12 +85,13 @@ class Sensor
   end
 
   def saveConfig
-    @config['reads']['url'] = @url if @url
-    @config['reads']['zone'] = @zone if @zone
-    @config['reads']['sensor'] = @sensor if @sensor
-    @config['reads']['rate'] = @rate if @rate
-    @config['reads']['state'] = @state_run if @state_run
-    @config['reads']['token'] = @token if @token
+    puts "saveconfig"
+    @config['reads']['url'] = @url
+    @config['reads']['zone'] = @zone
+    @config['reads']['sensor'] = @sensor
+    @config['reads']['rate'] = @rate
+    @config['reads']['state'] = @state_run
+    @config['reads']['token'] = @token
 
     File.open('config.yml', 'r+') do |file|
       file.write(@config.to_yaml)
@@ -95,15 +102,19 @@ class Sensor
     puts value
     #colocar try cath aqui
     # verificar se temos token se não vamos ter de fazer um login do administrador
-    response = HTTParty.post(
-        @url + '/reads',
-        headers: {"Authorization" => "#{@token}"},
-        body: { zone: @zone,
-                sensor: @sensor,
-                value: value,
-                timestamp: Time.now.getutc.to_i
-        })
-    puts response.code
+    begin
+      response = HTTParty.post(
+          @url + '/reads',
+          headers: {"Authorization" => "#{@token}"},
+          body: { zone: @zone,
+                  sensor: @sensor,
+                  value: value,
+                  timestamp: Time.now.getutc.to_i
+          })
+      puts response.code
+    rescue HTTParty::Error
+      puts 'Error to make POST /reads'
+    end
     if response.code == 401
       loginToken
       saveConfig

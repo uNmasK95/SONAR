@@ -4,7 +4,6 @@ require 'json'
 
 $sensor = Sensor.new
 
-
 get '/state', :provides => :json do
   content_type :json
   $sensor.state.to_json
@@ -24,17 +23,20 @@ end
 
 post '/turnOff' do
   content_type :json
-  $sensor.turnOff().to_json
+  $sensor.turnOff()
+  $sensor.state.to_json
 end
 
 post '/turnOn', :provides => :json do
   content_type :json
-  $sensor.turnOn().to_json
+  $sensor.turnOn()
+  $sensor.state.to_json
 end
 
 post '/rate' do
   rate = params[:rate].to_i
   $sensor.setRate( rate )
+  $sensor.state.to_json
 end
 
 
