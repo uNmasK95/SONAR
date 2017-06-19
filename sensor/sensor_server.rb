@@ -4,7 +4,8 @@ require 'json'
 
 set :bind, '0.0.0.0'
 
-$sensor = Sensor.new
+puts ARGV
+$sensor = Sensor.new(ARGV[0].to_i)
 
 get '/state', :provides => :json do
   content_type :json

@@ -1,7 +1,6 @@
 require 'yaml'
 require 'httparty'
 require 'json'
-require "open3"
 
 class Sensor
   include HTTParty
@@ -14,7 +13,10 @@ class Sensor
 
   attr_accessor :rate, :zone, :sensor, :url, :thread_read_noise_run, :thread_read_noise
 
-  def initialize
+  def initialize(type)
+    require 'open3' if type == 0
+
+    @type = type # 0 run readNoise 1 random
     @config = YAML.load_file('config.yml')
     run if openConfig
   end
@@ -131,7 +133,11 @@ class Sensor
 
         loop do
           Thread.stop if not @state_run
-          sendValue(readNoise)
+          if @type == 0
+            sendValue(readNoise)
+          else
+            sendValue(generateNoise)
+          end
           #sleep(@rate)
         end
       rescue  Exception => e
@@ -149,6 +155,7 @@ class Sensor
 
   def generateNoise
     puts "random"
+    sleep(@rate)
     rand(0..100)
   end
 
