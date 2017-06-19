@@ -1,3 +1,7 @@
+  89  sox -t .wav test7.wav -n stat
+   90  arecord -D plughw:0,0  -f cd test7.wav
+
+
 sox -d --norm -t .wav - silence -l 1 0 1% 1 6.0 1% rate 16k | lame -V2 - out.mp3
 (this would autodetect non-silence and start recording then)
 
