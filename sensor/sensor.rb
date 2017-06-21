@@ -137,6 +137,7 @@ class Sensor
             sendValue(readNoise)
           else
             sendValue(generateNoise)
+            puts "teste"
           end
           #sleep(@rate)
         end
@@ -159,12 +160,13 @@ class Sensor
       if rand(0...1) == 1
         value = rand(30...50)
       else
-        value = rand(80...100)
+        value = rand(70...100)
       end
     else
-      value = rand(50...80)
+      value = rand(50...70)
     end
     sleep(@rate)
+    return value
   end
 
 

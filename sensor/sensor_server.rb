@@ -4,6 +4,7 @@ require 'json'
 
 set :bind, '0.0.0.0'
 
+
 puts "RANDOM #{ARGV[0]}" if ARGV[0].to_i == 1
 $sensor = Sensor.new(ARGV[0].to_i)
 
