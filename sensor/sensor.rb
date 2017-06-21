@@ -154,9 +154,17 @@ class Sensor
   end
 
   def generateNoise
-    puts "random"
+
+    if rand(0...1.0) >= 0.8
+      if rand(0...1) == 1
+        value = rand(30...50)
+      else
+        value = rand(80...100)
+      end
+    else
+      value = rand(50...80)
+    end
     sleep(@rate)
-    rand(0..100)
   end
 
 
