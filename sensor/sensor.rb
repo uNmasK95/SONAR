@@ -22,7 +22,6 @@ class Sensor
   end
 
   def register(zone,sensor,url,rate)
-    puts "registe"
     @zone = zone
     @sensor = sensor
     @url = url
@@ -73,6 +72,7 @@ class Sensor
       @token = response_hash['auth_token']
     rescue HTTParty::Error
       puts 'Error to make POST /login'
+      @state_run = false
     end
   end
 
@@ -89,7 +89,6 @@ class Sensor
   end
 
   def saveConfig
-    puts "saveconfig"
     @config['reads']['url'] = @url
     @config['reads']['zone'] = @zone
     @config['reads']['sensor'] = @sensor
@@ -103,7 +102,7 @@ class Sensor
   end
 
   def sendValue value
-    puts value
+    puts "Noise value: #{value}"
     #colocar try cath aqui
     # verificar se temos token se não vamos ter de fazer um login do administrador
     begin
@@ -115,14 +114,16 @@ class Sensor
                   value: value,
                   timestamp: Time.now.getutc.to_i
           })
-      puts response.code
+      puts "Response code: #{response.code}"
+      if response.code == 401
+        loginToken
+        saveConfig
+      end
     rescue HTTParty::Error
       puts 'Error to make POST /reads'
+      @state_run = false
     end
-    if response.code == 401
-      loginToken
-      saveConfig
-    end
+
   end
 
   def run
@@ -137,7 +138,6 @@ class Sensor
             sendValue(readNoise)
           else
             sendValue(generateNoise)
-            puts "teste"
           end
           #sleep(@rate)
         end
@@ -168,7 +168,6 @@ class Sensor
     sleep(@rate)
     return value
   end
-
 
 end
 

@@ -6,6 +6,7 @@ reads:
   url: http://127.0.0.1:3000
   zone: 5947a191b4dedf7af6075fdd
   sensor: 5947a3e5b4dedf7af6075fdf
-  rate: 1
+  rate: 5
   state: true
-  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjp7IiRvaWQiOiI1OTQ3OWRhOWY1ZjM2ZDdhMTYxOGU2N2IifSwiZXhwIjoxNDk3OTUzNjM3fQ.xg7At2LCNdN5uPFWp_dBNYLmDl4IsRZY3QuaMpF6arU
+  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjp7IiRvaWQiOiI1OTQ3OWRhOWY1ZjM2ZDdhMTYxOGU2N2IifSwiZXhwIjoxNDk4MjM5Mzk4fQ.idUO3HPqw0d7P9SDsPwLmNXnbA9c870JtFMNFPbVgsQ
+
